@@ -31,7 +31,6 @@ setup(
       'Programming Language :: Python :: 3',
     ],
     keywords='',
-    packages=find_packages(exclude=['docs', 'tests*']),
     include_package_data=True,
     author='Brian Jackson',
     install_requires=install_requires,
