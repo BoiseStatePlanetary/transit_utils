@@ -23,7 +23,7 @@ setup(
     description='A small collection of methods for analyzing transit data',
     long_description=long_description,
     url='https://github.com/BoiseStatePlanetary/transit_utils',
-    download_url='https://github.com/BoiseStatePlanetary/transit_utils/tarball/' + __version__,
+    download_url='https://github.com/BoiseStatePlanetary/transit_utils/archive/0.0.1.tar.gz',
     license='BSD',
     classifiers=[
       'Development Status :: 3 - Alpha',
