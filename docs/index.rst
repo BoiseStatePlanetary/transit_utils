@@ -1,33 +1,21 @@
-transit_utils
-===============================
+.. transit_utils documentation master file, created by
+   sphinx-quickstart on Tue Jun  5 15:13:40 2018.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
-version number: 0.0.1
-author: Brian Jackson
+Welcome to transit_utils's documentation!
+=========================================
 
-Overview
---------
+.. toctree::
+   :maxdepth: 4
+   :caption: Contents:
 
-A small collection of methods for analyzing transit data
-
-Installation / Usage
---------------------
-
-To install use pip:
-
-    $ pip install transit_utils
+   transit_utils
 
 
-Or clone the repo:
+Indices and tables
+==================
 
-    $ git clone https://github.com/decaelus/transit_utils.git
-    $ python setup.py install
-    
-Contributing
-------------
-
-TBD
-
-Example
--------
-
-TBD
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
