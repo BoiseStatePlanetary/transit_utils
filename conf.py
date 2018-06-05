@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Transit Utils documentation build configuration file, created by
-# sphinx-quickstart on Tue Jun  5 13:43:25 2018.
+# sphinx-quickstart on Tue Jun  5 14:53:20 2018.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -20,14 +20,6 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
-from recommonmark.parser import CommonMarkParser
-
-source_parsers = {
-    '.md': CommonMarkParser,
-}
-
-source_suffix = ['.rst', '.md']
-
 
 # -- General configuration ------------------------------------------------
 
@@ -41,12 +33,9 @@ source_suffix = ['.rst', '.md']
 extensions = ['sphinx.ext.autodoc',
     'sphinx.ext.doctest',
     'sphinx.ext.intersphinx',
-    'sphinx.ext.coverage',
     'sphinx.ext.mathjax',
-    'sphinx.ext.ifconfig',
     'sphinx.ext.viewcode',
-    'sphinx.ext.githubpages', 
-    'sphinx.ext.napoleon']
+    'sphinx.ext.githubpages']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
