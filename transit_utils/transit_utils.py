@@ -108,3 +108,24 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean"):
         eclipse_bottom = calc_method(data[ind])
 
     return eclipse_bottom
+
+def supersample_time(time, supersample_factor, exp_time):
+    """Creates super-sampled time array
+
+    Args:
+        time (numpy array): times
+        supersample_factor (int): number of points subdividing exposure
+        exp_time (float): Exposure time (in same units as `time`)
+
+    Returns:
+        Returns the super-sampled time array
+    """
+
+    if supersample_factor > 1:
+        time_offsets = np.linspace(-exp_time/2., exp_time/2., 
+                supersample_factor)
+        time_supersample = (time_offsets +\
+                time.reshape(time.size, 1)).flatten()
+        else: time_supersample = time
+
+    return time_supersample
