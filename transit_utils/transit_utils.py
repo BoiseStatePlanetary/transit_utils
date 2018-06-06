@@ -126,6 +126,7 @@ def supersample_time(time, supersample_factor, exp_time):
                 supersample_factor)
         time_supersample = (time_offsets +\
                 time.reshape(time.size, 1)).flatten()
-        else: time_supersample = time
+        else: 
+            time_supersample = time
 
     return time_supersample
