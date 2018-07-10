@@ -2,7 +2,9 @@ from setuptools import setup, find_packages
 from codecs import open
 from os import path
 
-__version__ = '0.0.2'
+import transit_utils
+
+__version__ = transit_utils.__version__
 
 here = path.abspath(path.dirname(__file__))
 
@@ -23,7 +25,7 @@ setup(
     description='A small collection of methods for analyzing transit data',
     long_description=long_description,
     url='https://github.com/BoiseStatePlanetary/transit_utils',
-    download_url='https://github.com/BoiseStatePlanetary/transit_utils/archive/0.0.1.tar.gz',
+    download_url='https://github.com/BoiseStatePlanetary/transit_utils/archive/'+__version__+'.tar.gz',
     license='BSD',
     classifiers=[
       'Development Status :: 3 - Alpha',
