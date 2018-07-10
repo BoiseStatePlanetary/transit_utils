@@ -4,7 +4,7 @@ from os import path
 
 import transit_utils
 
-__version__ = transit_utils.__version__
+version = transit_utils.__version__
 
 here = path.abspath(path.dirname(__file__))
 
@@ -21,11 +21,11 @@ dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startsw
 
 setup(
     name='transit_utils',
-    version=__version__,
+    version=version,
     description='A small collection of methods for analyzing transit data',
     long_description=long_description,
     url='https://github.com/BoiseStatePlanetary/transit_utils',
-    download_url='https://github.com/BoiseStatePlanetary/transit_utils/archive/'+__version__+'.tar.gz',
+    download_url='https://github.com/BoiseStatePlanetary/transit_utils/archive/'+version+'.tar.gz',
     license='BSD',
     classifiers=[
       'Development Status :: 3 - Alpha',
