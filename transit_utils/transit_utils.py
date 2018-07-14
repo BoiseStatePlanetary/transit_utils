@@ -108,7 +108,7 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean"):
     # Find in-eclipse points
     period = params.per
     TE = calc_eclipse_time(params)
-    dur = transit_duration(which_duration="short")
+    dur = transit_duration(params, which_duration="short")
     ind = isInTransit(time, TE, period, 0.5*dur, boolOutput=True)
 
     eclipse_bottom = 0.
@@ -248,3 +248,37 @@ def bindata(time, data, binsize, bin_calc='median', err_calc='mad'):
                     binned_err = np.append(binned_err, err_calc_func(cur_data))
 
     return binned_time, binned_data, binned_err
+
+
+def transit_duration(params, which_duration="full"):
+    """
+    Calculates transit duration
+
+    Parameters
+    ----------
+    which_duration : str 
+        "full" - time from first to fourth contact
+        "center" - time from contact to contact between planet's center and
+            stellar limb
+        "short" - time from second to third contact
+
+    Returns
+    -------
+    transit_duration : float
+        transit duration in same units as period
+    """
+
+    period = params.per
+    rp = params.p
+    b = params.b
+    sma = params.a
+
+    if(which_duration == "full"):
+        return period/np.pi*np.arcsin(np.sqrt((1. + rp)**2 - b**2)/sma)
+    elif(which_duration == "center"):
+        return period/np.pi*np.arcsin(np.sqrt(1. - b**2)/sma)
+    elif(which_duration == "short"):
+        return period/np.pi*np.arcsin(np.sqrt((1. - rp)**2 - b**2)/sma)
+    else:
+        raise \
+            ValueError("which_duration must be 'full', 'center', 'short'!")
