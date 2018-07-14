@@ -1,3 +1,5 @@
+dist/
+
 *.py[cod]
 
 # C extensions
