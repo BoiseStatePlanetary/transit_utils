@@ -1,3 +1,4 @@
+from statsmodels.robust.scale import mad
 from scipy.signal import medfilt
 import numpy as np
 from PyAstronomy.pyasl import isInTransit
