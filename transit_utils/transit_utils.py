@@ -282,3 +282,42 @@ def transit_duration(params, which_duration="full"):
     else:
         raise \
             ValueError("which_duration must be 'full', 'center', 'short'!")
+
+def drop_outliers(data, outlier_group=5, num_std_desired=10.):
+    """
+    Flags outliers in ordered data series
+
+    Parameters
+    ----------
+    data : array
+        ordered data array
+    outlier_group : int, optional
+        number of datapoints to group together in calculating standard
+        deviation; defaults to 5
+    num_std_desired : float, optional
+        number of standard deviations beyond which to declare an outlier
+
+    Returns
+    -------
+    mask of non-outlier points
+    """
+
+    # Pad out data array to have outlier_group x N number of elements
+    num_extra_elements = outlier_group - (len(data) % outlier_group)
+
+    copy_data = np.append(data, np.zeros(num_extra_elements))
+
+    # Using the outer product makes outlier_group copies of each standard 
+    # deviation and median, allowing me to compare to each data point
+    std = np.outer(mad(copy_data.reshape(-1, 5), axis=1),
+            np.ones(outlier_group))
+    med = np.outer(np.nanmedian(copy_data.reshape(-1, 5), axis=1),
+        np.ones(outlier_group))
+    num_std = abs((copy_data.reshape(-1, 5) - med)/std).flatten()
+
+    ind = num_std < num_std_desired
+
+    # Unpad index array
+    ind = ind[0:len(data)]
+
+    return ind
