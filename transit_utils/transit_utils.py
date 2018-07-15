@@ -4,7 +4,8 @@ import numpy as np
 from PyAstronomy.pyasl import isInTransit
 
 __all__ = ['calc_phi', 'calc_eclipse_time', 'transit_duration',
-    'fit_eclipse_bottom', 'supersample_time', 'median_boxcar_filter', 'bindata']
+    'fit_eclipse_bottom', 'supersample_time', 'median_boxcar_filter',
+    'bindata', 'flag_outliers']
 
 def calc_phi(time, params):
     """Calculates orbital phase assuming zero eccentricity
@@ -283,7 +284,7 @@ def transit_duration(params, which_duration="full"):
         raise \
             ValueError("which_duration must be 'full', 'center', 'short'!")
 
-def drop_outliers(data, outlier_group=5, num_std_desired=10.):
+def flag_outliers(data, outlier_group=5, num_std_desired=10.):
     """
     Flags outliers in ordered data series
 
