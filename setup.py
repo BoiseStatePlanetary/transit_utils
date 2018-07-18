@@ -6,7 +6,6 @@ setup(
     name='transit_utils',
     version=version,
     description='A small collection of methods for analyzing transit data',
-    long_description=long_description,
     url='https://github.com/BoiseStatePlanetary/transit_utils',
     download_url='https://github.com/BoiseStatePlanetary/transit_utils/archive/'+version+'.tar.gz',
     license='BSD',
