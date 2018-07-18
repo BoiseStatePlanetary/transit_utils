@@ -1,8 +1,9 @@
 from setuptools import setup
 from codecs import open
 from os import path
+import transit_utils
 
-version = '0.0.13'
+version = transit_utils.__version__
 
 here = path.abspath(path.dirname(__file__))
 
