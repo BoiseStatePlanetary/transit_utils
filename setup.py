@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '0.0.16'
+version = '0.17'
 
 setup(
     name='transit_utils',
@@ -14,8 +14,8 @@ setup(
       'Intended Audience :: Developers',
       'Programming Language :: Python :: 3',
     ],
+    packages=['transit_utils'],
     keywords='',
-    include_package_data=True,
     author='Brian Jackson',
     install_requires=['statsmodels', 'scipy', 'numpy', 'PyAstronomy'],
     author_email='bjackson@boisestate.edu'
