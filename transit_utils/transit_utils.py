@@ -78,7 +78,8 @@ def transit_duration(params, which_duration="full"):
     else:
         raise ValueError("which_duration must be 'full', 'center', 'short'!")
 
-def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean"):
+def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean",
+        which_duration="short"):
     """Calculates the eclipse bottom to set the zero-point in the data
 
     Args:
@@ -94,6 +95,12 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean"):
             Which method used to set zero-point -
                 "mean" - Use in-eclipse average value
                 "median" - Use in-eclipse median value
+        which_duration (str):
+            Which kind of eclipse to use -- The usual eclipse duration to 
+                consider ("short") won't work for planets whose centers
+                are never occulted (e.g., Kepler-76 b), so other options
+                are required - 
+                See :func:`~transit_utils.transit_duration` for an explanation.
 
     Returns:
         eclipse bottom value
@@ -109,7 +116,7 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean"):
     # Find in-eclipse points
     period = params.per
     TE = calc_eclipse_time(params)
-    dur = transit_duration(params, which_duration="short")
+    dur = transit_duration(params, which_duration=which_duration)
     ind = isInTransit(time, TE, period, 0.5*dur, boolOutput=True)
 
     eclipse_bottom = 0.
