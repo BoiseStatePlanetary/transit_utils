@@ -241,11 +241,11 @@ def bindata(time, data, binsize, bin_calc='median', err_calc='mad'):
 
         if(ind.size > 0): 
             # Remove nans, too
-            cur_data = data[ind[~np.isnan(data[ind])]] 
+            cur_time = time[ind[~np.isnan(data[ind])]]
+            cur_data = data[ind[~np.isnan(data[ind])]]
             
             if(cur_data.size > 0):
-                binned_time = np.append(binned_time, times_to_try[i])
-
+                binned_time = np.append(binned_time, bin_calc_func(cur_time))
                 binned_data = np.append(binned_data, bin_calc_func(cur_data))
 
                 # Check for bad error value

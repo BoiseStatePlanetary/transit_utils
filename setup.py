@@ -1,6 +1,6 @@
 from setuptools import setup
 
-version = '0.18'
+version = '0.19'
 
 setup(
     name='transit_utils',
