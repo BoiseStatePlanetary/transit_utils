@@ -147,12 +147,15 @@ def supersample_time(time, supersample_factor, exp_time):
 
     return time_supersample
 
-def median_boxcar_filter(data, window_length=None, endpoints='reflect'):
+def median_boxcar_filter(time, data, window_length=None, endpoints='reflect',
+        mask_ind=None):
     """
     Creates median boxcar filter and deals with endpoints
 
     Parameters
     ----------
+    time : numpy array
+        times associated with data array
     data : numpy array 
        Data array
     window_length: int
@@ -161,6 +164,10 @@ def median_boxcar_filter(data, window_length=None, endpoints='reflect'):
         How to deal with endpoints. 
         Only option right now is 'reflect', which extends the data array
         on both ends by reflecting the data
+    mask_ind : optional, indices
+        If None, ignored
+        If an array of indices, it represents all the points to be masked 
+        during the boxcar filtering.
 
     Returns
     -------
@@ -168,20 +175,29 @@ def median_boxcar_filter(data, window_length=None, endpoints='reflect'):
         The filter array
     """
 
-    filter_array = data
+    filter_array = np.copy(data)
     # Create filter array
     if(endpoints == 'reflect'):
         last_index = len(data) - 1
         
-        filter_array = np.concatenate((np.flip(data[0:window_length], 0), 
-            data, 
-            data[last_index - window_length:last_index]))
+        # If mask_ind provided, interpolate across the masked points
+        if(mask_ind is not None):
+            not_mask_ind = ~mask_ind
+            filter_array = np.interp(time[mask_ind],
+                    time[not_mask_ind], filter_array[not_mask_ind])
+
+        filter_array =\
+                np.concatenate((np.flip(filter_array[0:window_length], 0), 
+                    filter_array, 
+                    filter_array[last_index - window_length:last_index]))
 
         # Make filter
         # Check that window_length is odd
         if(window_length % 2 == 0):
             window_length += 1
         filt = medfilt(filter_array, window_length)
+        print(filt.shape, window_length, window_length + last_index + 1,
+                filt[window_length:window_length + last_index + 1].shape)
 
         filt = filt[window_length:window_length + last_index + 1]
 
