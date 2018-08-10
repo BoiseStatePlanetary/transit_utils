@@ -1,6 +1,8 @@
 from setuptools import setup
 
-version = '0.20'
+import transit_utils
+
+version = transit_utils.__version__
 
 setup(
     name='transit_utils',

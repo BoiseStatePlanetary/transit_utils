@@ -179,16 +179,16 @@ def median_boxcar_filter(time, data, window_length=None, endpoints='reflect',
     # Create filter array
     if(endpoints == 'reflect'):
         last_index = len(data) - 1
-        
+
         # If mask_ind provided, interpolate across the masked points
         if(mask_ind is not None):
             not_mask_ind = ~mask_ind
-            filter_array = np.interp(time[mask_ind],
+            filter_array[mask_ind] = np.interp(time[mask_ind],
                     time[not_mask_ind], filter_array[not_mask_ind])
-
+            
         filter_array =\
-                np.concatenate((np.flip(filter_array[0:window_length], 0), 
-                    filter_array, 
+                np.concatenate((np.flip(filter_array[0:window_length], 0),
+                    filter_array,
                     filter_array[last_index - window_length:last_index]))
 
         # Make filter
@@ -196,8 +196,6 @@ def median_boxcar_filter(time, data, window_length=None, endpoints='reflect',
         if(window_length % 2 == 0):
             window_length += 1
         filt = medfilt(filter_array, window_length)
-        print(filt.shape, window_length, window_length + last_index + 1,
-                filt[window_length:window_length + last_index + 1].shape)
 
         filt = filt[window_length:window_length + last_index + 1]
 
