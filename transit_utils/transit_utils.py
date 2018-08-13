@@ -335,7 +335,13 @@ def flag_outliers(data, outlier_group=5, num_std_desired=10.):
             np.ones(outlier_group))
     med = np.outer(np.nanmedian(copy_data.reshape(-1, 5), axis=1),
         np.ones(outlier_group))
-    num_std = abs((copy_data.reshape(-1, 5) - med)/std).flatten()
+
+    # Check for NaN
+    not_nan_ind = ~np.isnan(std)
+    num_std = np.zeros_like(med)
+    num_std[not_nan_ind] =\
+            abs(((copy_data.reshape(-1, 5))[not_nan_ind] -
+                med[not_nan_ind])/std[not_nan_ind]).flatten()
 
     ind = num_std < num_std_desired
 
