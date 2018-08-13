@@ -113,14 +113,24 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean",
     else:
         raise ValueError("which_method should be mean or median!")
 
-    # Find in-eclipse points
+    eclipse_bottom = 0.
     period = params.per
     TE = calc_eclipse_time(params)
+
+    # In some cases, the planet is never totally occulted.
+    #   For those cases, use the minimum value during eclipse!
+    if((1. - params.p)**2 - params.b**2. < 0.):
+        never_totally_occulted = True
+        which_duration = "full"
+
+    # Find in-eclipse points
     dur = transit_duration(params, which_duration=which_duration)
+
     ind = isInTransit(time, TE, period, 0.5*dur, boolOutput=True)
 
-    eclipse_bottom = 0.
-    if(ind.size > 0):
+    if(never_totally_occulted):
+        eclipse_bottom = np.interp(TE, time, data)
+    else:
         eclipse_bottom = calc_method(data[ind])
 
     return eclipse_bottom
@@ -295,15 +305,29 @@ def transit_duration(params, which_duration="full"):
     b = params.b
     sma = params.a
 
+    ret = 0.
     if(which_duration == "full"):
-        return period/np.pi*np.arcsin(np.sqrt((1. + rp)**2 - b**2)/sma)
+        # First check that can return meaningful value
+        check_value = (1. + rp)**2 - b**2
+        if(check_value >= 0.):
+            ret = period/np.pi*np.arcsin(np.sqrt((1. + rp)**2 - b**2)/sma)
+
     elif(which_duration == "center"):
-        return period/np.pi*np.arcsin(np.sqrt(1. - b**2)/sma)
+        # First check that can return meaningful value
+        check_value = 1. - b**2
+        if(check_value >= 0.):
+            ret = period/np.pi*np.arcsin(np.sqrt(1. - b**2)/sma)
+
     elif(which_duration == "short"):
-        return period/np.pi*np.arcsin(np.sqrt((1. - rp)**2 - b**2)/sma)
+        # First check that can return meaningful value
+        check_value = (1. - rp)**2 - b**2
+        if(check_value >= 0.):
+            ret = period/np.pi*np.arcsin(np.sqrt((1. - rp)**2 - b**2)/sma)
     else:
         raise \
             ValueError("which_duration must be 'full', 'center', 'short'!")
+
+    return ret
 
 def flag_outliers(data, outlier_group=5, num_std_desired=10.):
     """
@@ -341,7 +365,8 @@ def flag_outliers(data, outlier_group=5, num_std_desired=10.):
     num_std = np.zeros_like(med)
     num_std[not_nan_ind] =\
             abs(((copy_data.reshape(-1, 5))[not_nan_ind] -
-                med[not_nan_ind])/std[not_nan_ind]).flatten()
+                med[not_nan_ind])/std[not_nan_ind])
+    num_std = num_std.flatten()
 
     ind = num_std < num_std_desired
 
