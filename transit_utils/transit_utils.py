@@ -121,17 +121,14 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean",
     #   For those cases, use the minimum value during eclipse!
     if((1. - params.p)**2 - params.b**2. < 0.):
         never_totally_occulted = True
-        which_duration = "full"
+        which_duration = "center"
 
     # Find in-eclipse points
     dur = transit_duration(params, which_duration=which_duration)
 
     ind = isInTransit(time, TE, period, 0.5*dur, boolOutput=True)
 
-    if(never_totally_occulted):
-        eclipse_bottom = np.interp(TE, time, data)
-    else:
-        eclipse_bottom = calc_method(data[ind])
+    eclipse_bottom = calc_method(data[ind])
 
     return eclipse_bottom
 
