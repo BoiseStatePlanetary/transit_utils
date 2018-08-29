@@ -78,8 +78,7 @@ def transit_duration(params, which_duration="full"):
     else:
         raise ValueError("which_duration must be 'full', 'center', 'short'!")
 
-def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean",
-        which_duration="short"):
+def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean"):
     """Calculates the eclipse bottom to set the zero-point in the data
 
     Args:
@@ -95,12 +94,6 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean",
             Which method used to set zero-point -
                 "mean" - Use in-eclipse average value
                 "median" - Use in-eclipse median value
-        which_duration (str):
-            Which kind of eclipse to use -- The usual eclipse duration to 
-                consider ("short") won't work for planets whose centers
-                are never occulted (e.g., Kepler-76 b), so other options
-                are required - 
-                See :func:`~transit_utils.transit_duration` for an explanation.
 
     Returns:
         eclipse bottom value
@@ -118,17 +111,21 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean",
     TE = calc_eclipse_time(params)
 
     # In some cases, the planet is never totally occulted.
-    #   For those cases, use the minimum value during eclipse!
+    #   For those cases, fit eclipse with quadratic and return min value.
     if((1. - params.p)**2 - params.b**2. < 0.):
-        never_totally_occulted = True
-        which_duration = "center"
+        # Find in-eclipse points
+        dur = transit_duration(params, which_duration='center')
+        ind = isInTransit(time, TE, period, 0.5*dur, boolOutput=True)
+        
+        # Fit quadratic to eclipse to estimate minimum
+        coeffs = np.polyfit(time[ind], data[ind], 2)
+        eclipse_bottom = np.polyval(coeffs, -coeffs[1]/2./coeffs[0])
+    else:
+        # Find in-eclipse points
+        dur = transit_duration(params, which_duration='short')
+        ind = isInTransit(time, TE, period, 0.5*dur, boolOutput=True)
 
-    # Find in-eclipse points
-    dur = transit_duration(params, which_duration=which_duration)
-
-    ind = isInTransit(time, TE, period, 0.5*dur, boolOutput=True)
-
-    eclipse_bottom = calc_method(data[ind])
+        eclipse_bottom = calc_method(data[ind])
 
     return eclipse_bottom
 
