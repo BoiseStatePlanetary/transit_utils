@@ -240,7 +240,7 @@ def bindata(time, data, binsize,
 
     # 2018 May 23 - There are not always points in each time bin,
     #   so we will TRY to find points but will not always find them.
-    if(time_to_try is None):
+    if(times_to_try is None):
         times_to_try = np.arange(np.min(time) + 0.5*binsize, 
                 np.max(time) - 0.5*binsize, binsize)
 
