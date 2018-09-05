@@ -205,7 +205,8 @@ def median_boxcar_filter(time, data, window_length=None, endpoints='reflect',
 
     return filt
 
-def bindata(time, data, binsize, bin_calc='median', err_calc='mad'):
+def bindata(time, data, binsize, 
+        times_to_try=None, bin_calc='median', err_calc='mad'):
     """
     Bins data array
 
@@ -217,6 +218,8 @@ def bindata(time, data, binsize, bin_calc='median', err_calc='mad'):
         data array
     binsize : float
         Width of bins in same units at time
+    times_to_try : numpy array
+        times to try as the bin centers
     bin_calc : str
         Method to use to calculate datum in each bin. 
         Can be either 'mean' or 'median'
@@ -237,8 +240,9 @@ def bindata(time, data, binsize, bin_calc='median', err_calc='mad'):
 
     # 2018 May 23 - There are not always points in each time bin,
     #   so we will TRY to find points but will not always find them.
-    times_to_try = np.arange(np.min(time) + 0.5*binsize, 
-            np.max(time) - 0.5*binsize, binsize)
+    if(time_to_try is None):
+        times_to_try = np.arange(np.min(time) + 0.5*binsize, 
+                np.max(time) - 0.5*binsize, binsize)
 
     binned_time = np.array([])
     binned_data = np.array([])
