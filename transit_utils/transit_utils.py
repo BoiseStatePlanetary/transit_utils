@@ -267,7 +267,7 @@ def bindata(time, data, binsize,
             cur_data = data[ind[~np.isnan(data[ind])]]
             
             if(cur_data.size > 0):
-                binned_time = np.append(binned_time, bin_calc_func(cur_time))
+                binned_time = np.append(binned_time, times_to_try[i])
                 binned_data = np.append(binned_data, bin_calc_func(cur_data))
 
                 # Check for bad error value
