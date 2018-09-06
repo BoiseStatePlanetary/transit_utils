@@ -1,7 +1,7 @@
 transit_utils
 ===============================
 
-version number: 0.20
+version number: 0.28
 author: Brian Jackson
 
 Overview
