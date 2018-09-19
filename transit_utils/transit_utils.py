@@ -114,7 +114,7 @@ def fit_eclipse_bottom(time, data, params, zero_eclipse_method="mean"):
     #   For those cases, fit eclipse with quadratic and return min value.
     if((1. - params.p)**2 - params.b**2. < 0.):
         # Find in-eclipse points
-        dur = transit_duration(params, which_duration='center')
+        dur = transit_duration(params, which_duration='full')
         ind = isInTransit(time, TE, period, 0.5*dur, boolOutput=True)
 
         # Fit quadratic to eclipse to estimate minimum
