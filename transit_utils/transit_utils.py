@@ -42,8 +42,7 @@ def calc_eclipse_time(params):
 
     return T0 + 0.5*per
 
-def transit_duration(params_object=None, params_dict=None, 
-        which_duration="full"):
+def transit_duration(params, which_duration="full"):
     """Calculates transit duration
 
     Args:
@@ -65,19 +64,16 @@ def transit_duration(params_object=None, params_dict=None,
         transit_duration: transit duration in same units as period
     """
 
-    if(params_objects is not None):
-        period = params.per
-        rp = params.p
-        b = params.b
-        sma = params.a
-    elif(params_dict is not None):
+    if(isinstance(params, dict)):
         period = params['per']
         rp = params['p']
         b = params['b']
         sma = params['a']
     else:
-        raise AttributeError('Either params_object or params_dict' +\
-                ' must contain the system parameters.')
+        period = params.per
+        rp = params.p
+        b = params.b
+        sma = params.a
 
     if(which_duration == "full"):
         return period/np.pi*np.arcsin(np.sqrt((1. + rp)**2 - b**2)/sma)
