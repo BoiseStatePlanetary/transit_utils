@@ -290,54 +290,6 @@ def bindata(time, data, binsize,
 
     return binned_time, binned_data, binned_err
 
-
-def transit_duration(params, which_duration="full"):
-    """
-    Calculates transit duration
-
-    Parameters
-    ----------
-    which_duration : str 
-        "full" - time from first to fourth contact
-        "center" - time from contact to contact between planet's center and
-            stellar limb
-        "short" - time from second to third contact
-
-    Returns
-    -------
-    transit_duration : float
-        transit duration in same units as period
-    """
-
-    period = params.per
-    rp = params.p
-    b = params.b
-    sma = params.a
-
-    ret = 0.
-    if(which_duration == "full"):
-        # First check that can return meaningful value
-        check_value = (1. + rp)**2 - b**2
-        if(check_value >= 0.):
-            ret = period/np.pi*np.arcsin(np.sqrt((1. + rp)**2 - b**2)/sma)
-
-    elif(which_duration == "center"):
-        # First check that can return meaningful value
-        check_value = 1. - b**2
-        if(check_value >= 0.):
-            ret = period/np.pi*np.arcsin(np.sqrt(1. - b**2)/sma)
-
-    elif(which_duration == "short"):
-        # First check that can return meaningful value
-        check_value = (1. - rp)**2 - b**2
-        if(check_value >= 0.):
-            ret = period/np.pi*np.arcsin(np.sqrt((1. - rp)**2 - b**2)/sma)
-    else:
-        raise \
-            ValueError("which_duration must be 'full', 'center', 'short'!")
-
-    return ret
-
 def flag_outliers(data, outlier_group=5, num_std_desired=10.):
     """
     Flags outliers in ordered data series
