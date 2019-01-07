@@ -198,9 +198,9 @@ def median_boxcar_filter(time, data, window_length=None, endpoints='reflect',
                     time[not_mask_ind], filter_array[not_mask_ind])
             
         filter_array =\
-                np.concatenate((np.flip(filter_array[0:window_length], 0),
+                np.concatenate((np.flip(filter_array[0:2*window_length], 0),
                     filter_array,
-                    filter_array[last_index - window_length:last_index]))
+                    filter_array[last_index - 2*window_length:last_index]))
 
         # Make filter
         # Check that window_length is odd
