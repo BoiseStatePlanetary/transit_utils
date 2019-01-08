@@ -208,7 +208,7 @@ def median_boxcar_filter(time, data, window_length=None, endpoints='reflect',
             window_length += 1
         filt = medfilt(filter_array, window_length)
 
-        filt = filt[window_length:window_length + last_index + 1]
+        filt = filt[2*window_length:2*window_length + last_index + 1]
 
     return filt
 
