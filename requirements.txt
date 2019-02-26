@@ -1,0 +1,2 @@
+numpy>=1.14.3
+PyAstronomy>=0.12.0
