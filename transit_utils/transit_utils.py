@@ -2,10 +2,11 @@ from statsmodels.robust.scale import mad
 from scipy.signal import medfilt
 import numpy as np
 from PyAstronomy.pyasl import isInTransit
+from PyAstronomy.modelSuite.XTran.forTrans import MandelAgolLC
 
 __all__ = ['calc_phi', 'calc_eclipse_time', 'transit_duration',
     'fit_eclipse_bottom', 'supersample_time', 'median_boxcar_filter',
-    'bindata', 'flag_outliers']
+    'bindata', 'flag_outliers', 'filter_data', 'fit_transit']
 
 def calc_phi(time, params):
     """Calculates orbital phase assuming zero eccentricity
@@ -332,3 +333,62 @@ def flag_outliers(data, outlier_group=5, num_std_desired=10.):
     ind = ind[0:len(data)]
 
     return ind
+
+def filter_data(cur_time, cur_flux,
+    num_periods=4, drop_outliers=False, params=None):
+
+    saved_median = np.nanmedian(cur_flux)
+    cur_flux = (cur_flux - saved_median)/saved_median
+
+    window = num_periods*params['per']
+    del_t = np.nanmedian(cur_time[1:] - cur_time[:-1])
+    window_length = int(window/del_t)
+
+    # Indicate all points in transit
+    ind = None
+    if(params is not None):
+        folded_time = cur_time % params['per']
+
+        dur = transit_duration(params, which_duration='full')
+
+        # This expression below should technically be
+        # ind = np.abs(folded_time - params.T0) < 0.5*dur, but
+        # I'm taking a little window to either side of the transit
+        # to make sure I'm masking everything.
+        if(type(params) is dict):
+            T0 = params['T0']
+        else:
+            T0 = params.T0
+        ind = np.abs(folded_time - T0) < dur
+
+    filt = median_boxcar_filter(cur_time, cur_flux,
+        window_length, mask_ind=ind)
+
+    filtered_time = cur_time
+    filtered_flux = cur_flux - filt
+    returned_filter = filt*saved_median + saved_median
+
+    if(drop_outliers):
+        ind = flag_outliers(filtered_flux)
+        filtered_time = filtered_time[ind]
+        filtered_flux = filtered_flux[ind]
+
+    return filtered_time, filtered_flux, returned_filter
+
+def fit_transit(time, params, supersample_factor=10, exp_time=30./60./24.):
+    time_supersample = supersample_time(time, supersample_factor, exp_time)
+
+    ma = MandelAgolLC(orbit="circular", ld="quad")
+
+    baseline = params["baseline"]
+
+    ma["per"] = params["per"]
+    ma["a"] = params["a"]
+    ma["T0"] = params["T0"]
+    ma["p"] = params["p"]
+    ma["i"] = np.arccos(params["b"]/params["a"])*180./np.pi
+    ma["linLimb"] = params["linLimb"]
+    ma["quadLimb"] = params["quadLimb"]
+
+    transit_supersample = ma.evaluate(time_supersample) - 1. + baseline
+    return np.mean(transit_supersample.reshape(-1, supersample_factor), axis=1)
